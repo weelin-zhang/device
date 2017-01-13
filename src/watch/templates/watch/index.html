@@ -1,0 +1,153 @@
+{% extends "watch/Base.html" %}	
+{% load mymethod %}
+
+{% block content %}
+
+
+
+
+<div class="main-content">
+
+<div class="order_header">
+<!-- 
+	状态
+	<select style="width:100px;">
+		<option value=""></option>
+		<option value="在线">在线</option>
+		<option value="离线">离线</option>
+	</select>
+	<input value="搜索" id="submitSearch" name="search" type="submit">	 
+-->
+	<form action='/watch/info/' method='POST' class="form_asset">
+	关键字:<input placeholder="序列号、模糊匹配" id="keyWord" name="keyWord" type="text" value='{{key}}' onchange='Changekey(this);'>
+	状态:<select id="onlineStatus" name='status' onchange='Changestatus(this);'>
+		<option value='all'>all</option>
+		<option value="Online">在线</option>
+		<option value="Offline">离线</option>
+	</select>
+	<input type='submit' id="submitSearch" value=搜索 />
+	</form>
+</div>
+	<table border=1px style="margin:0 auto;">
+		
+		{% if assets %}
+			<tr>
+				<th>Sn</th>
+				<th>Mac</th>
+				<th>Type</th>
+				<th>Hbver</th>
+				<th>Portalver</th>
+				<th>Updatetime</th>
+				<th>Status</th>
+			</tr>
+			{% for item in assets %}
+					
+					<tr class="{% get_device_status item %}">
+						<td class="td_common">{{item.sn}}</td>
+						<td class="td_common">{{item.mac}}</td>
+						<td class="td_common">{{item.type}}</td>
+						<td class="td_common">{{item.hbversion}}</td>
+						<td class="td_common">{{item.portalversion}}</td>
+						<td class="td_date">{{item.update_date|date:"Y-m-d H:i:s"}}</td>
+						<td class="td_common">{% get_device_status item %}</td>
+					</tr>
+				
+			{% endfor %}
+			
+			
+		{% else %}
+			<p>没有符合要求的数据!!!</p>	
+		{% endif %}		
+	</table>
+	<br/>
+	<span style="margin:10px;">共有<span style='color:red'>{{count}}</span>条记录每页最多<span style="color:red">10</span>条</span>
+	{% for pagehtml in pages_html %}
+		{{pagehtml}}
+	{% endfor %}
+	<br/>
+	<br/>
+</div>
+
+
+<script type="text/javascript">
+
+$(function(){
+	console.log()
+	var status = $.cookie('status')
+	if (status){
+		
+		$('#onlineStatus').val(status);
+		
+	}
+	else{
+		$.cookie('status','all',{path:'/'});
+		console.log($.cookie('status'))
+	}
+	
+	var key = $.cookie('key')
+	if (key){
+		
+		$('#keyWord').val(key);
+		
+	}
+	else{
+		$.cookie('key','',{path:'/'});
+	}
+	
+	
+})
+
+
+function Changestatus(arg){
+	//创建、修改cookies
+	console.log('status change');
+	var value = $(arg).val();
+	$.cookie('status',value,{path:'/'});
+	
+}
+
+function Changekey(arg){
+	//创建、修改cookies
+	console.log('key change');
+	var value = $(arg).val();
+	$.cookie('key',value,{path:'/'});
+	
+}
+
+
+
+
+
+
+
+//跨站伪造提交ajax 加上这些代码
+	var csrftoken = $.cookie('csrftoken');
+ 
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+//跨站伪造提交ajax 加上这些代码
+/*
+	function Checksearch(){
+		var keyobj = $('#keyWord')
+		var key_value = keyobj.val()
+		var statusobj = $('#onlineStatus')
+		var status_value = statusobj.val()
+		
+		if (key_value || status_value){
+			
+			
+		}
+}
+*/
+</script>
+
+{% endblock %}

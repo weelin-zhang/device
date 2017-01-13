@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+
+.order_header{
+	
+	height:50px;
+	text-align:center;
+	background-color:#8080ff;
+	
+}
+
+.form_asset{
+	padding-top:15px;
+}
+
+.main-content{
+	margin:0 auto;
+	width:1050px;
+	text-align:center;
+	border:1px solid #333;
+}
+.h1{
+	text-align:center;
+	color:red;
+	}
+	
+td{
+	text-align:center;
+}
+.td_common{
+	width:140px;
+}
+.td_date{
+	width:200px;
+}
+	
+.Online td{
+	font-siz:15px;
+	font-weight:bold;
+}
+.Offline td{
+	color:red;
+}
+
